@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Motor Dealer</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+
+<body class="bg-white flex flex-col min-h-screen">
+  <nav class="bg-blue-900 p-4">
+    <div class="container mx-auto flex justify-between items-center relative">
+      <a class="text-white text-lg font-bold" href="#">AHMAD DRINK & FOOD</a>
+      <div class="hidden lg:flex lg:items-center" id="nav-content">
+        <ul class="flex flex-col lg:flex-row lg:ml-auto">
+          <li class="nav-item">
+            <a class="nav-link text-white px-4 py-2" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white px-4 py-2" href="admin.html">Product</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white px-4 py-2" href="category.html">Category</a>
+          </li>
+        </ul>
+      </div>
+      <button class="text-white block lg:hidden relative z-10" id="nav-toggle">
+        <svg class="fill-current h-6 w-6" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <title>Menu</title>
+          <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+  <header class="bg-gray-200 py-5">
+    <div class="container mx-auto flex justify-center items-center">
+      <img src="img/logo-lp3i (1).png" alt="Politeknik LP3I" class="h-12 mr-4" />
+    </div>
+  </header>
+
+  <main class="container mx-auto mt-8 flex-grow">
+    <h2 class="text-2xl font-bold mb-2 text-center">Menu Restoran</h2>
+    <p class="text-center mb-8">
+      Berikut ini adalah beberapa menu yang tersedia :
+    </p>
+    <div id="result" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 ml-20">
+      <!-- Dynamic content will be injected here -->
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      const formatRupiah = (number) => {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+        }).format(number);
+      };
+      const GetProduct = async () => {
+        await axios
+          .get("http://localhost:3000/product")
+          .then((response) => {
+            const products = response.data;
+            let bucket = "";
+            products.forEach((product) => {
+              bucket += `
+                <div class="p-6 rounded-3xl shadow-md border border-gray-100 w-60">
+                  <div>
+                    <img src="${product.foto}" alt="${product.nama
+                }" class="w-full  object-cover mb-4"/>
+                  </div>
+                  <h3 class="text-lg font-bold mb-2">${product.nama}</h3>
+                  <p class="text-gray-600 font-normal mb-4">${product.deskripsi
+                }</p>
+                  <span class="inline-block bg-${product.kategori === "AT" ? "blue" : "yellow"
+                }-100 text-${product.kategori === "AT" ? "blue" : "yellow"
+                }-800 text-sm px-2 py-1 rounded-full font-semibold mb-2">${product.category
+                }</span>
+                  <div class="text-lg font-semibold text-gray-800">${formatRupiah(
+                  product.harga
+                )}</div>
+                </div>`;
+            });
+            document.getElementById("result").innerHTML = bucket;
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      };
+
+      GetProduct();
+    </script>
+  </main>
+
+  <footer class="bg-gray-900 py-4 mt-10 shadow w-full">
+    <div class="container mx-auto text-center">
+      <p class="text-white">
+        © 2023 Materi kuliah Front End Development by kanglerian | Politeknik
+        LP3I Kampus Tasikmalaya
+      </p>
+    </div>
+  </footer>
+</body>
+
+</html>
